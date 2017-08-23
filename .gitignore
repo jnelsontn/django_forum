@@ -1,0 +1,5 @@
+*.pyc
+secret.py
+*.db
+*.sqlite3
+migrations/
