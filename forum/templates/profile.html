@@ -1,0 +1,8 @@
+uid: {{ profile.id }} <br />
+username: {{ profile.username }} <br />
+join date: {{ profile.date_joined }} <br />
+last seen: {{ profile.last_login }} <br />
+
+{% if profile.email %}
+	email: {{ profile.email }} <br />
+{% endif %}	
