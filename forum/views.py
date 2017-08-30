@@ -1,35 +1,25 @@
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.models import User
-from forum.models import *
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+from django.views import generic
+from forum.models import *
 
-def index(request):
-    threads = Thread.objects.all()
-    context = {
-    	'threads': threads
-    }
-    return render(request, 'index.html', context)
+class ForumIndexView(generic.ListView):
+	model = Thread
+	context_object_name = 'threads'
+	template_name = 'index.html'
 
-def thread(request, thread_id):
-	thread = get_object_or_404(Thread, pk=thread_id)
-	replies = thread.post_set.all()[1:]
-	context = {
-		'thread': thread,
-		'replies': replies
-	}
-	return render(request, 'thread.html', context)
+class ForumThreadView(generic.DetailView):
+	model = Thread
+	context_object_name = 'thread'
+	template_name = 'thread_detail.html'
 
-def post(request, thread_id, post_id):
-	thread = get_object_or_404(Thread, pk=thread_id)
-	post = thread.post_set.get(pk=post_id)
-	context = {
-		'post': post
-	}
-	return render(request, 'post.html', context)
+class ForumPostView(generic.DetailView):
+	model = Post
+	context_object_name = 'post'
+	template_name = 'post_detail.html'
 
-def profile(request, user_id):
-	profile = get_object_or_404(User, pk=user_id)
-	context = {
-		'profile': profile,
-	}
-	return render(request, 'profile.html', context)
+class UserProfileView(generic.DetailView):
+	model = User
+	context_object_name = 'profile'
+	template_name = 'profile_detail.html'

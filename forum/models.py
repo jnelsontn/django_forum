@@ -1,7 +1,6 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 class Thread(models.Model):
 	user = models.ForeignKey(User)
@@ -11,6 +10,9 @@ class Thread(models.Model):
 	def __str__(self):
 		return self.subject + ' by ' + str(self.user)
 
+	def get_absolute_url(self):
+		return reverse('forum:view_thread', args=[str(self.id)])
+
 class Post(models.Model):
 	thread = models.ForeignKey(Thread)
 	user = models.ForeignKey(User)
@@ -19,4 +21,7 @@ class Post(models.Model):
 
 	def __str__(self):
 		return 'thread_id: ' + str(self.thread.id) + ' reply by ' + str(self.user) + '. post_id: ' + str(self.id)
+
+	def get_absolute_url(self):
+		return reverse('forum:view_post', args=[str(self.thread.id), str(self.id)])
 

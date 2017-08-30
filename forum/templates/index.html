@@ -1,8 +1,8 @@
 {% if threads %}
 
 	{% for each_thread in threads %}
-		<a href="{% url 'thread' each_thread.id %}"> {{ each_thread.subject }} </a> 
-		by <a href="{% url 'profile' user.id %}"> {{ user.username }} </a> <br />
+		<a href="{{ each_thread.get_absolute_url }}"> {{ each_thread.subject }} </a> 
+		by <a href="{% url 'forum:view_user_profile' each_thread.user.id %}"> {{ each_thread.user.username }} </a> <br />
 	{% endfor %}
 
 {% endif %}
