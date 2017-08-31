@@ -2,7 +2,7 @@ Subject: {{ thread.subject }} at {{ thread.created }}
 
 <br /><br />
 
-{% for each_post in view.get_posts %}
+{% for each_post in thread.post_set.all %}
 	By: {{ each_post.user }} <br />
 	Post ID: <a href="{{ each_post.get_absolute_url }}"> {{ each_post.id }} </a> <br />
 	At: {{ each_post.created }} <br />

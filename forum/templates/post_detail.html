@@ -2,3 +2,6 @@
 Reply By: {{ post.user }} <br />
 At: {{ post.created }} <br />
 Content: {{ post.content }} <br /><br />
+
+<a href="{{ post.thread.get_absolute_url }}">Return to Main Thread</a> <br />
+<a href="{% url 'forum:view_forum_index' %}">Return to Home</a>

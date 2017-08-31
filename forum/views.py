@@ -14,9 +14,6 @@ class ForumThreadView(generic.DetailView):
 	context_object_name = 'thread'
 	template_name = 'thread_detail.html'
 
-	def get_posts(self):
-		return Post.objects.filter(thread=self.kwargs['pk'])
-
 class ForumPostView(generic.DetailView):
 	model = Post
 	context_object_name = 'post'
