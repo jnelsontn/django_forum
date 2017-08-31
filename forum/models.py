@@ -2,9 +2,10 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db import models
+import random
 
 def gen_slug(content, uid=None):
-	from random import randint
+
 	random_number = str(random.randint(1000, 20000))
 	if uid:
 		return random_number + '-' + content[:20] + '-' + str(uid)
@@ -42,7 +43,7 @@ class Post(models.Model):
 
 	def save(self):
 		super().save()
-		self.slug = slugify(gen_slug(self.content, self.id))
+		self.slug = slugify(gen_slug(self.content))
 		super().save()
 
 	def get_absolute_url(self):
