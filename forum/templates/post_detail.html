@@ -1,7 +1,16 @@
+{% extends 'index.html' %}
+{% block content %}
 
 Reply By: <a href="{% url 'forum:view_user_profile' post.user.id %}">{{ post.user }} </a><br />
 At: {{ post.created }} <br />
-Content: {{ post.content }} <br /><br />
+Content: {{ post.content }} <br />
+
+{% if post.user.id == user.id %}
+<a href="{{ post.get_absolute_url }}edit">Edit Post</a> <br />
+<a href="{{ post.get_absolute_url }}delete">Delete Post</a> <br /><br />
+{% endif %}
 
 <a href="{{ post.thread.get_absolute_url }}">Return to Main Thread</a> <br />
-<a href="{% url 'forum:view_forum_index' %}">Return to Home</a>
+
+
+{% endblock %}

@@ -1,8 +1,24 @@
+{% extends 'index.html' %}
+{% block content %}
+
 uid: {{ profile.id }} <br />
 username: {{ profile.username }} <br />
+{% if profile.first_name %}
+	name: {{ profile.first_name }}
+{% endif %}
+{% if profile.last_name %}
+	{{ profile.last_name }} <br />
+{% endif %}
+
 join date: {{ profile.date_joined }} <br />
 last seen: {{ profile.last_login }} <br />
 
 {% if profile.email %}
-	email: {{ profile.email }} <br />
+	email: {{ profile.email }} <br /><br />
 {% endif %}	
+
+{% if profile.id == user.id %}
+<a href="{% url 'forum:view_edit_profile' %}">Edit Profile</a>
+{% endif %}
+
+{% endblock %}

@@ -1,12 +1,39 @@
-{% if threads %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	{% block title %}
+	<title>Simple Django Forum</title>
+	{% endblock %}
 
-	{% for each_thread in threads %}
-		<a href="{{ each_thread.get_absolute_url }}"> {{ each_thread.subject }} </a> 
-		by <a href="{% url 'forum:view_user_profile' each_thread.user.id %}"> {{ each_thread.user.username }} </a> <br />
-	{% endfor %}
+</head>
+<body>
+{% if user.id %}
 
+	{% if threads %}
+
+		{% for each_thread in threads|slice:"5" %}
+			<a href="{{ each_thread.get_absolute_url }}"> {{ each_thread.subject }} </a> 
+			by <a href="{% url 'forum:view_user_profile' each_thread.user.id %}"> {{ each_thread.user.username }} </a> <br />
+		{% endfor %}
+
+	{% endif %}
+
+	<br />
+
+	{% block content %}
+	{% endblock %}
+
+	<br /><br /><br />
+	Footer: <br />
+	<a href="{% url 'forum:create_thread' %}">Create Thread</a> <br />
+	<a href="{% url 'forum:view_user_profile' user.id %}">Profile</a>
+	<a href="{% url 'forum:view_edit_profile' %}">Edit Profile</a>
+
+{% else %}
+	<h3>Must be a registered user</h3>
 {% endif %}
 
-<br />
-
-<a href="{% url 'forum:create_thread' %}">Create Thread</a>
+</body>
+</html>
