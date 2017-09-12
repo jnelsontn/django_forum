@@ -3,10 +3,11 @@ Subject: {{ thread.subject }} at {{ thread.created }}
 <br /><br />
 
 {% for each_post in thread.post_set.all %}
-	By: {{ each_post.user }} <br />
+	By: <a href="{% url 'forum:view_user_profile' each_post.user.id %}">{{ each_post.user }} </a><br />
 	Post ID: <a href="{{ each_post.get_absolute_url }}"> {{ each_post.id }} </a> <br />
 	At: {{ each_post.created }} <br />
 	Content: {{ each_post.content }} <br /><br />
 {% endfor %}
 
+<a href="{% url 'forum:reply_thread' thread.slug %}">Reply To Thread</a> <br />
 <a href="{% url 'forum:view_forum_index' %}">Return to Home</a>

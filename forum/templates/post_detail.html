@@ -1,5 +1,5 @@
 
-Reply By: {{ post.user }} <br />
+Reply By: <a href="{% url 'forum:view_user_profile' post.user.id %}">{{ post.user }} </a><br />
 At: {{ post.created }} <br />
 Content: {{ post.content }} <br /><br />
 

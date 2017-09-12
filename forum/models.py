@@ -22,13 +22,13 @@ class Thread(models.Model):
 	def __str__(self):
 		return self.subject + ' by ' + str(self.user)
 
-	def get_absolute_url(self):
-		kwargs = {'slug': self.slug}
-		return reverse('forum:view_thread', kwargs=kwargs)
-
 	def save(self):
 		self.slug = slugify(gen_slug(self.subject))
 		super().save()
+
+	def get_absolute_url(self):
+		kwargs = {'slug': self.slug}
+		return reverse('forum:view_thread', kwargs=kwargs)
 
 
 class Post(models.Model):
