@@ -41,6 +41,9 @@ class ForumCreateReplyView(generic.CreateView):
 		form.instance.user = self.request.user
 		return super().form_valid(form)
 
+	def get_success_url(self):
+		return reverse('forum:view_thread', kwargs={'slug': self.object.thread.slug })
+
 
 class ForumPostEditView(generic.UpdateView):
 
@@ -55,26 +58,30 @@ class ForumPostEditView(generic.UpdateView):
 
 		if this_user is not post_author:
 			return HttpResponse('Access Denied.')
+		self.object.edited = True
 		return super().form_valid(form)
 
+	def get_success_url(self):
+		return reverse('forum:view_thread', kwargs={'slug': self.object.thread.slug })
 
-class ForumPostDeleteView(generic.DeleteView):
+class ForumPostDeleteView(generic.UpdateView):
 
 	model = Post
 	template_name = 'delete_post.html'
+	fields = []
 
-	def delete(self, *args, **kwargs):
-		self.obj = self.get_object()
+	def form_valid(self, form):
 		this_user = self.request.user.id
-		post_author = self.obj.user.id
+		post_author = self.object.user.id
 
 		if this_user is not post_author:
 			return HttpResponse('Access Denied.')
-		return super().delete(self.obj)
+		self.object.content = 'Post Removed by {}'.format(self.object.user)
+		self.object.deleted = True
+		return super().form_valid(form)
 
 	def get_success_url(self):
-		obj = self.get_object()
-		return reverse('forum:view_thread', kwargs={'slug': obj.thread.slug })
+		return reverse('forum:view_thread', kwargs={'slug': self.object.thread.slug })
 
 
 def ForumCreateThreadView(request):
@@ -105,6 +112,13 @@ def ForumCreateThreadView(request):
 		return render(request, 'thread_create.html', 
 			{'create_thread_form': create_thread_form, 
 			'create_post_form': create_post_form})
+
+
+class UserProfileRegisterView(generic.CreateView):
+
+	model = User
+	template_name = 'register_user.html'
+	fields = ['username', 'email', 'password', 'first_name', 'last_name',]
 
 
 class UserProfileView(generic.DetailView):

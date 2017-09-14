@@ -1,16 +1,23 @@
 {% extends 'index.html' %}
 {% block content %}
+	By: <a href="{% url 'forum:view_user_profile' post.user.id %}">{{ post.user }} </a><br />
+	Post ID: <a href="{{ post.get_absolute_url }}"> {{ post.id }} </a> <br />
+	At: {{ post.created }} <br />
+	Content: {{ post.content }} <br />
 
-Reply By: <a href="{% url 'forum:view_user_profile' post.user.id %}">{{ post.user }} </a><br />
-At: {{ post.created }} <br />
-Content: {{ post.content }} <br />
+	{% if post.deleted %}
+		Post Deleted at: {{ post.edited_date }} <br />
+	{% elif each_post.edited %}
+		Post Last Modified at: {{ post.edited_date }} <br />
+	{% endif %}
 
-{% if post.user.id == user.id %}
-<a href="{{ post.get_absolute_url }}edit">Edit Post</a> <br />
-<a href="{{ post.get_absolute_url }}delete">Delete Post</a> <br /><br />
-{% endif %}
+	{% if user.is_authenticated and post.user.id == user.id and not post.deleted %}
+		<a href="{{ post.get_absolute_url }}edit">Edit Post</a>
+		<a href="{{ post.get_absolute_url }}delete">Delete Post</a>
+	{% endif %}
 
-<a href="{{ post.thread.get_absolute_url }}">Return to Main Thread</a> <br />
+	<br /><br />
 
+	<a href="{{ post.thread.get_absolute_url }}">Return to Main Thread</a>
 
 {% endblock %}

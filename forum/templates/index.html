@@ -1,39 +1,42 @@
 {% load staticfiles %}
+{% load show_most_recent_threads display_forum_statistics from tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	{% block title %}
 	<title>Simple Django Forum</title>
-	{% endblock %}
+	{% endblock title %}
 
 </head>
 <body>
-{% if user.id %}
-
-	{% if threads %}
-
-		{% for each_thread in threads|slice:"5" %}
-			<a href="{{ each_thread.get_absolute_url }}"> {{ each_thread.subject }} </a> 
-			by <a href="{% url 'forum:view_user_profile' each_thread.user.id %}"> {{ each_thread.user.username }} </a> <br />
-		{% endfor %}
-
+	{% if user.is_authenticated %}
+		You are logged on, {{ user.first_name }} {{ user.last_name }}
+	{% else %}
+		Not Logged In
 	{% endif %}
 
-	<br />
+	{% show_most_recent_threads %} <br /><br />
 
-	{% block content %}
-	{% endblock %}
+	{% block content %}{% endblock content %}
 
 	<br /><br /><br />
-	Footer: <br />
-	<a href="{% url 'forum:create_thread' %}">Create Thread</a> <br />
-	<a href="{% url 'forum:view_user_profile' user.id %}">Profile</a>
-	<a href="{% url 'forum:view_edit_profile' %}">Edit Profile</a>
 
-{% else %}
-	<h3>Must be a registered user</h3>
-{% endif %}
+	{% if user.is_authenticated %}
+		<a href="{% url 'forum:create_thread' %}">Create Thread</a>
+		<a href="{% url 'forum:view_user_profile' user.id %}">Profile</a>
+		<a href="{% url 'forum:view_edit_profile' %}">Edit Profile</a>
+		<a href="{% url 'forum:view_forum_index' %}">Forum Index</a>
+		<a href="{% url 'forum:logout' %}">Logout</a>
+	{% else %}
+		<a href="{% url 'forum:view_forum_index' %}">Forum Index</a>
+		<a href="{% url 'forum:register_user' %}">Register</a>
+		<a href="{% url 'forum:login' %}">Login</a>
+	{% endif %}
+
+	<br /><br />
+
+	{% display_forum_statistics %}
 
 </body>
 </html>

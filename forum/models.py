@@ -23,7 +23,8 @@ class Thread(models.Model):
 		return self.subject + ' by ' + str(self.user)
 
 	def save(self):
-		self.slug = slugify(gen_slug(self.subject))
+		if not self.slug:
+			self.slug = slugify(gen_slug(self.subject))
 		super().save()
 
 	def get_absolute_url(self):
@@ -38,12 +39,17 @@ class Post(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	slug = models.SlugField(default='', blank=True)
 
+	edited = models.BooleanField(default=False)
+	edited_date = models.DateTimeField(auto_now=True)
+	deleted = models.BooleanField(default=False)
+
 	def __str__(self):
-		return 'thread_id: ' + str(self.thread.id) + ' reply by ' + str(self.user) + '. post_id: ' + str(self.id)
+		return 'thread_id: ' + str(self.thread.id) + ' by ' + str(self.user) + '. post_id: ' + str(self.id)
 
 	def save(self):
 		super().save()
-		self.slug = slugify(gen_slug(self.content))
+		if not self.slug:
+			self.slug = slugify(gen_slug(self.content))
 		super().save()
 
 	def get_absolute_url(self):

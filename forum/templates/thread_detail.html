@@ -1,22 +1,64 @@
 {% extends 'index.html' %}
 {% block content %}
 
-Subject: {{ thread.subject }} at {{ thread.created }} 
+	{% for each_post in thread.post_set.all %}
 
-<br /><br />
+		{% if forloop.first %}
 
-{% for each_post in thread.post_set.all %}
-	By: <a href="{% url 'forum:view_user_profile' each_post.user.id %}">{{ each_post.user }} </a><br />
-	Post ID: <a href="{{ each_post.get_absolute_url }}"> {{ each_post.id }} </a> <br />
-	At: {{ each_post.created }} <br />
-	Content: {{ each_post.content }} <br />
-	{% if post.user.id == user.id %}
-		<a href="{{ each_post.get_absolute_url }}edit">Edit Post</a>
-		<a href="{{ each_post.get_absolute_url }}delete">Delete Post</a> <br /><br />
+			Thread Subject: {{ thread.subject }} <br />
+			By <a href="{% url 'forum:view_user_profile' thread.user.id %}">{{ thread.user }}</a> <br />
+			Thread ID: {{ thread.id }}
+			Post ID: <a href="{{ each_post.get_absolute_url }}"> {{ each_post.id }} </a> <br />
+			Created At: {{ thread.created }}
+
+			{{ each_post.content }} <br />
+
+			{% if each_post.deleted %}
+				Post Deleted at: {{ each_post.edited_date }} <br />
+			{% elif each_post.edited %}
+				Post Last Modified at: {{ each_post.edited_date }} <br />
+			{% endif %}
+
+			{% if user.is_authenticated and each_post.user.id == user.id and not each_post.deleted %}
+				<a href="{{ each_post.get_absolute_url }}edit">Edit Post</a>
+				<a href="{{ each_post.get_absolute_url }}delete">Delete Post</a>
+			{% endif %}
+
+			<br /><br />
+
+		{% else %}
+
+			Reply {{ forloop.counter }}
+			By: <a href="{% url 'forum:view_user_profile' each_post.user.id %}">{{ each_post.user }} </a>
+			Post ID: <a href="{{ each_post.get_absolute_url }}"> {{ each_post.id }} </a>
+			At: {{ each_post.created }} <br />
+			Content: {{ each_post.content }} <br />
+
+			{% if each_post.deleted %}
+				Post Deleted at: {{ each_post.edited_date }} <br />
+			{% elif each_post.edited %}
+				Post Last Modified at: {{ each_post.edited_date }} <br />
+			{% endif %}
+
+			{% if user.is_authenticated and each_post.user.id == user.id and not each_post.deleted %}
+				{% if not thread.post_set.first.deleted %}
+					<a href="{{ each_post.get_absolute_url }}edit">Edit Post</a>
+				{% endif %}
+				<a href="{{ each_post.get_absolute_url }}delete">Delete Post</a>
+			{% endif %}
+
+			<br /><br />
+
+		{% endif %}
+
+	{% endfor %}
+
+	{% if user.is_authenticated %}
+		{% if not thread.post_set.first.deleted %}
+			<a href="{% url 'forum:reply_thread' thread.slug %}">Reply To Thread</a>
+		{% else %}
+			<h5>Cannot Reply to a Thread where first post is deleted.</h5>
+		{% endif %}
 	{% endif %}
-{% endfor %}
 
-<a href="{% url 'forum:reply_thread' thread.slug %}">Reply To Thread</a> <br />
-<a href="{% url 'forum:view_forum_index' %}">Return to Home</a>
-
-{% endblock %}
+{% endblock content %}
