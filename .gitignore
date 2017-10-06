@@ -3,3 +3,6 @@ secret.py
 *.db
 *.sqlite3
 migrations/
+.idea/
+.idea/dictionaries
+.xml

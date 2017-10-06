@@ -27,11 +27,11 @@
 		<a href="{% url 'forum:view_user_profile' user.id %}">Profile</a>
 		<a href="{% url 'forum:view_edit_profile' %}">Edit Profile</a>
 		<a href="{% url 'forum:view_forum_index' %}">Forum Index</a>
-		<a href="{% url 'forum:logout' %}">Logout</a>
+		<a href="{% url 'forum:logout_user' %}">Logout</a>
 	{% else %}
 		<a href="{% url 'forum:view_forum_index' %}">Forum Index</a>
 		<a href="{% url 'forum:register_user' %}">Register</a>
-		<a href="{% url 'forum:login' %}">Login</a>
+		<a href="{% url 'forum:login_user' %}">Login</a>
 	{% endif %}
 
 	<br /><br />
